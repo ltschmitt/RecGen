@@ -38,26 +38,25 @@ git clone https://github.com/ltschmitt/RecGen
 ```
 python vae_train_loocv.py -i example_input/training_data_encoded.csv
 ```
-Expected output: 
-- output_loocv/
-      - loss.csv: the loss values observed over the course of training
-      - parameters.txt: the parameters used for training
-      - prediction_freqs.csv: the frequency of the predicted amino acids for each position
-      - prediction_hamming.csv: the hamming distances of for example the left out libraries and the predictions
-      - prediction_strings.csv: the predicted target site + amino acid sequences in a comma seperated format
+Expected output in output_loocv/: 
+- loss.csv: the loss values observed over the course of training
+- parameters.txt: the parameters used for training
+- prediction_freqs.csv: the frequency of the predicted amino acids for each position
+- prediction_hamming.csv: the hamming distances of for example the left out libraries and the predictions
+- prediction_strings.csv: the predicted target site + amino acid sequences in a comma seperated format
 
 ##### Prediction of novel recombinases:
 ```
 python vae_train_save.py -i example_input/training_data_encoded.csv
 python vae_load_predict.py -m saved_models -t example_input/predict_ts.csv -d example_input/training_data_encoded.csv 
 ``` 
-Expected output: 
-- saved_models/
-      - parameters.txt: the parameters used for training
-      - CVAE_0.pt: the model file
-- output_prediction/
-      - parameters.txt: the parameters used for prediction
-      - prediction_str.csv: the predicted recombinase sequences with their target sites
+Expected output in saved_models/: 
+- parameters.txt: the parameters used for training
+- CVAE_0.pt: the model file
+
+Expected output in output_prediction/:
+- parameters.txt: the parameters used for prediction
+- prediction_str.csv: the predicted recombinase sequences with their target sites
 
 All of these processes are not very demanding, so they should be done within a few minutes.
 
