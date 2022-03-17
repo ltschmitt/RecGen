@@ -57,27 +57,6 @@ def analyse_model(out_dict, loss_df, summary_function, leave_out_y, yx_oh, yx_in
     # combine hamming of prediction and closest lib
     out_dict['prediction_hamming'].append( pd.concat([recon_hamming, pred_hamming, closest_hamming]))
 
-    # frequencies of z search prediction
-    yx_pred_zsearch_freqs = utp.aa_freqs(yx_pred_zsearch_ind, vocab_list)
-    yx_pred_zsearch_freqs['Pos'] = list(range(1,yx_pred_zsearch_ind.shape[1]+1))
-    yx_pred_zsearch_freqs['TargetSequence'] = leave_out_y
-    yx_pred_zsearch_freqs['DataType'] = 'Prediction'
-
-    # frequencies of closest neighbor libraries in training set
-    closest_freqs = utp.aa_freqs(yx_ind[closest_index], vocab_list)
-    closest_freqs['Pos'] = list(range(1,yx_ind[closest_index].shape[1]+1))
-    closest_freqs['TargetSequence'] = leave_out_y
-    closest_freqs['DataType'] = 'Closest_Library'
-
-    # frequencies of closest neighbor libraries in training set
-    true_freqs = utp.aa_freqs(yx_ind[test_index], vocab_list)
-    true_freqs['Pos'] = list(range(1,yx_ind[test_index].shape[1]+1))
-    true_freqs['TargetSequence'] = leave_out_y
-    true_freqs['DataType'] = 'Truth'
-
-    # combine freqs of prediction and closest lib
-    out_dict['prediction_freqs'].append( pd.concat([yx_pred_zsearch_freqs, closest_freqs, true_freqs]))
-
     # add actual predictions to output
     pred_str = pd.DataFrame(utils.indices_to_seqaln(yx_pred_zsearch_ind, vocab_list, join = False))
     pred_str['TargetSequence'] = leave_out_y
@@ -87,6 +66,7 @@ def analyse_model(out_dict, loss_df, summary_function, leave_out_y, yx_oh, yx_in
 
 
 def main(
+    data = 'example_input/training_data_encoded.csv',
     model_type = 'CVAE',
     latent_size = 2,
     layer_sizes = [64, 32],
@@ -113,7 +93,7 @@ def main(
     summary_function = np.min
 
     # load the data
-    combdf = ld.load_Rec_TS(file = 'example_input/training_data_encoded.csv', nreads = nreads, ts_subset_index=ts_subset_index)
+    combdf = ld.load_Rec_TS(file = data, nreads = nreads, ts_subset_index=ts_subset_index)
 
     # make indices and encode to one-hot
     yx_ind = np.array(utils.seqaln_to_indices(combdf.combined_sequence,vocab_list))
@@ -154,6 +134,8 @@ if __name__ == '__main__':
 
     # argument parser
     parser = argparse.ArgumentParser(description='Train VAEs and perform leave-one-out cross-validation.')
+    parser.add_argument('-o','--outfolder', nargs='?', default='output_loocv/', type=str, help='default = %(default)s; output folder for saving results', dest='outprefix')
+    parser.add_argument('-i','--input_data', nargs='?', default='example_input/training_data_encoded.csv', type=str, help='default = %(default)s; csv input table containing the columns target_sequence and Sequence (recombinase in amino acid).', dest='input_data')
     parser.add_argument('-m','--model_type', nargs='?', default='CVAE', type=str, help='default = %(default)s; select the type of VAE model to use; options: VAE, CVAE, SVAE, MMD_VAE, VQ_VAE', dest='model_type')
     parser.add_argument('-z','--latent_size', nargs='?', default=2, type=int, help='default = %(default)s; the latent size dimensions', dest='latent_size')
     parser.add_argument('-l','--layer_sizes', nargs='*', default=[64,32], type=int, help='default = %(default)s; the hidden layer dimensions in the model', dest='layer_sizes')
@@ -183,13 +165,14 @@ if __name__ == '__main__':
     summary_function = summary_function_options[args.summary_function]
 
     # string for saving
-    folderstr = 'output_lot/{}e{}z{}b{}a{}c{}{}'.format(args.model_type,args.epochs,args.latent_size,args.batch_size,args.beta,args.hamming_cutoff,args.ts_slice)
+    folderstr = args.outprefix
     print('output going into: ' + folderstr)
 
     out_collect = defaultdict(list)
 
     for model_nr in range(args.n_models):
         out = main(
+            data = args.input_data,
             model_type = args.model_type,
             latent_size = args.latent_size,
             layer_sizes = args.layer_sizes,

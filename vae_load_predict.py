@@ -17,7 +17,8 @@ import argparse
 
 # argument parser
 parser = argparse.ArgumentParser(description='Predict recombinases for defined target sites with saved models.')
-parser.add_argument('-m','--model_folder', nargs='?', type=str, help='Select the folder where the model files are saved', dest='model_folder')
+parser.add_argument('-o','--outfolder', nargs='?', default='output_prediction', type=str, help='default = %(default)s; output folder for saving results', dest='outprefix')
+parser.add_argument('-m','--model_folder', nargs='?', default='saved_models', type=str, help='Select the folder where the model files are saved', dest='model_folder')
 parser.add_argument('-t','--target_sequences', nargs='?', default='example_input/predict_ts.csv', type=str, help='The target sites you want to predict recombinases for. In csv format, must contain column "target_sequence"', dest='target_sequences')
 parser.add_argument('-d','--training_data', nargs='?', default='example_input/training_data_encoded.csv', type=str, help='default = %(default)s; define csv input file with training data. Necessary for estimation of latent space spread.', dest='training_data')
 parser.add_argument('-n','--n_out', nargs='?', default=100, type=int, help='default = %(default)s; number of predictions to make for each model', dest='n_out')
@@ -33,7 +34,7 @@ modeldir = args.model_folder
 ###### load and prepare data ######
 
 # read paramters from models
-with open(modeldir + 'parameters.txt') as f:
+with open(modeldir + '/parameters.txt') as f:
     params = {k:eval(v) for (k,v) in [x.split(':\t') for x in f.read().splitlines()]}
 
 # get model files from modeldir
@@ -63,7 +64,7 @@ ts_oh = np.repeat(np.reshape(a=y_pred_oh, newshape=(len(target_sequence),ts_len*
 pred_str_list = []
 for i in model_files:
     print('Predicting with: ' + i)
-    model = torch.load(modeldir + i)
+    model = torch.load(modeldir + '/' + i)
 
     z_train = training.model_predict(model.encoder, yx_oh, 10000)
 
@@ -75,7 +76,7 @@ for i in model_files:
     pred_str_list.append(pd.DataFrame({'Sequence' : utils.indices_to_seqaln(yx_pred_zsearch_ind, vocab_list, join = True), 'TargetSequence' : list(chain(*[[x] * out_samples for x in target_sequence])), 'Model' : i }))
 
 # create output folder
-folderstr = 'output_prediction/' + datetime.now().strftime("%Y-%m-%d_%H-%M")
+folderstr = args.outprefix
 folderstr = utils.check_mkdir(folderstr)
 
 # write parameters
