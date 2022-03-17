@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser(description='Predict recombinases for defined t
 parser.add_argument('-o','--outfolder', nargs='?', default='output_prediction', type=str, help='default = %(default)s; output folder for saving results', dest='outprefix')
 parser.add_argument('-m','--model_folder', nargs='?', default='saved_models', type=str, help='Select the folder where the model files are saved', dest='model_folder')
 parser.add_argument('-t','--target_sequences', nargs='?', default='example_input/predict_ts.csv', type=str, help='The target sites you want to predict recombinases for. In csv format, must contain column "target_sequence"', dest='target_sequences')
-parser.add_argument('-d','--training_data', nargs='?', default='example_input/training_data_encoded.csv', type=str, help='default = %(default)s; define csv input file with training data. Necessary for estimation of latent space spread.', dest='training_data')
+parser.add_argument('-d','--training_data', nargs='?', default='example_input/training_data_masked.csv', type=str, help='default = %(default)s; define csv input file with training data. Necessary for estimation of latent space spread.', dest='training_data')
 parser.add_argument('-n','--n_out', nargs='?', default=100, type=int, help='default = %(default)s; number of predictions to make for each model', dest='n_out')
 
 args = parser.parse_args()

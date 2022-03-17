@@ -9,7 +9,7 @@ RecGen is a conditional variational autoencoder for the generation of tyrosine s
 - vae_load_predict.py: load trained models and predict for target site of interest.
 
 ### Example Data:
-- training_data_encoded.csv: an example how the input data should look like and can be used to test the software, but will not produce a useful model.
+- training_data_masked.csv: an example how the input data should look like and can be used to test the software, but will not produce a useful model.
 - predict_ts.csv: contains the target sites for which predictions were made for in the publication, can be used for testing.
 
 ### Requiremnts:
@@ -36,7 +36,7 @@ git clone https://github.com/ltschmitt/RecGen
 ### Usage Demo:
 #### Leave-one-out cross-validation:
 ```
-python vae_train_loocv.py -i example_input/training_data_encoded.csv
+python vae_train_loocv.py -i example_input/training_data_masked.csv
 ```
 Expected output in output_loocv/: 
 - loss.csv: the loss values observed over the course of training
@@ -47,8 +47,8 @@ Expected output in output_loocv/:
 
 #### Prediction of novel recombinases:
 ```
-python vae_train_save.py -i example_input/training_data_encoded.csv
-python vae_load_predict.py -m saved_models -t example_input/predict_ts.csv -d example_input/training_data_encoded.csv 
+python vae_train_save.py -i example_input/training_data_masked.csv
+python vae_load_predict.py -m saved_models -t example_input/predict_ts.csv -d example_input/training_data_masked.csv 
 ``` 
 Expected output in saved_models/: 
 - parameters.txt: the parameters used for training

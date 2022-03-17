@@ -66,7 +66,7 @@ def analyse_model(out_dict, loss_df, summary_function, leave_out_y, yx_oh, yx_in
 
 
 def main(
-    data = 'example_input/training_data_encoded.csv',
+    data = 'example_input/training_data_masked.csv',
     model_type = 'CVAE',
     latent_size = 2,
     layer_sizes = [64, 32],
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     # argument parser
     parser = argparse.ArgumentParser(description='Train VAEs and perform leave-one-out cross-validation.')
     parser.add_argument('-o','--outfolder', nargs='?', default='output_loocv/', type=str, help='default = %(default)s; output folder for saving results', dest='outprefix')
-    parser.add_argument('-i','--input_data', nargs='?', default='example_input/training_data_encoded.csv', type=str, help='default = %(default)s; csv input table containing the columns target_sequence and Sequence (recombinase in amino acid).', dest='input_data')
+    parser.add_argument('-i','--input_data', nargs='?', default='example_input/training_data_masked.csv', type=str, help='default = %(default)s; csv input table containing the columns target_sequence and Sequence (recombinase in amino acid).', dest='input_data')
     parser.add_argument('-m','--model_type', nargs='?', default='CVAE', type=str, help='default = %(default)s; select the type of VAE model to use; options: VAE, CVAE, SVAE, MMD_VAE, VQ_VAE', dest='model_type')
     parser.add_argument('-z','--latent_size', nargs='?', default=2, type=int, help='default = %(default)s; the latent size dimensions', dest='latent_size')
     parser.add_argument('-l','--layer_sizes', nargs='*', default=[64,32], type=int, help='default = %(default)s; the hidden layer dimensions in the model', dest='layer_sizes')
