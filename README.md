@@ -34,7 +34,7 @@ git clone https://github.com/ltschmitt/RecGen
 ```
 
 ### Usage Demo:
-##### Leave-one-out cross-validation:
+#### Leave-one-out cross-validation:
 ```
 python vae_train_loocv.py -i example_input/training_data_encoded.csv
 ```
@@ -45,7 +45,7 @@ Expected output in output_loocv/:
 - prediction_hamming.csv: the hamming distances of for example the left out libraries and the predictions
 - prediction_strings.csv: the predicted target site + amino acid sequences in a comma seperated format
 
-##### Prediction of novel recombinases:
+#### Prediction of novel recombinases:
 ```
 python vae_train_save.py -i example_input/training_data_encoded.csv
 python vae_load_predict.py -m saved_models -t example_input/predict_ts.csv -d example_input/training_data_encoded.csv 
