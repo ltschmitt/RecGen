@@ -3,13 +3,15 @@ Code repository from the publication "Prediction of designer-recombinases for DN
 
 RecGen is a conditional variational autoencoder for the generation of tyrosine site-specific recombinases selective for the defined DNA target site. The repository contains the code that was used to train the RecGen models.
 
+You can find the publication [here](https://www.ebi.ac.uk/ena/browser/view/PRJEB57361) and the recombinase sequences [here](https://www.ebi.ac.uk/ena/browser/view/PRJEB57361)
+
 ### Content:
 - vae_train_loocv.py: perform leave-one-out cross-validation on the training data.
 - vae_train_save.py: train models with all libraries and save models.
 - vae_load_predict.py: load trained models and predict for target site of interest.
 
 ### Example Data:
-- training_data_masked.csv: an example how the input data should look like and can be used to test the software, but will not produce a useful model.
+- training_data_masked.csv: an example how the input data should look like and can be used to test the software. The data is not useful, all mutations have been replaced with stars.
 - predict_ts.csv: contains the target sites for which predictions were made for in the publication, can be used for testing.
 
 ### Requiremnts:
